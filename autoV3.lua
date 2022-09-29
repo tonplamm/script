@@ -12,7 +12,7 @@ repeat wait()
 	if _G.Team == nil then
 		_G.Team = "Pirates"
 	end
-	_G.Team = "Marines"
+	_G.Team = "Pirates"
 	if (_G.Team == "Pirates" or _G.Team == "Marines") and not join then
 		repeat wait()
 			pcall(function()
