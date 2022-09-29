@@ -601,7 +601,9 @@ function ui:CreateWindow(text,logo1,logo2,toclose)
 						TweenService:Create(Main,TweenInfo.new(0.4,Enum.EasingStyle.Back,Enum.EasingDirection.In),{Size = UDim2.new(0, 0, 0, 0)}):Play()
 						uitoggled = true
 					else
-						Main:TweenSize(UDim2.new(0, 623, 0, 504), Enum.EasingDirection.Out, Enum.EasingStyle.Back, .4, true)
+						pcall(function()
+							Main:TweenSize(UDim2.new(0, 623, 0, 504), Enum.EasingDirection.Out, Enum.EasingStyle.Back, .4, true)
+						end)
 						uitoggled = false
 					end
 				end
@@ -3051,39 +3053,20 @@ spawn(function()
     end
 end)
 
-local CombatFrameworkROld = require(game:GetService("Players").LocalPlayer.PlayerScripts.CombatFramework) 
-local CombatFrameworkR = getupvalues(CombatFrameworkROld)[2]
-local CameraShakerR = require(game.ReplicatedStorage.Util.CameraShaker)
-CameraShakerR:Stop()
-spawn(function()
-	game:GetService("RunService").Stepped:Connect(function()
-		pcall(function()
-			CombatFrameworkR.activeController.hitboxMagnitude = 50
-			if _G.FastAttack then
-				if fastattack then
-					if game.Players.LocalPlayer.Character:FindFirstChild("Black Leg") then
-						CombatFrameworkR.activeController.timeToNextAttack = 3
-					elseif game.Players.LocalPlayer.Character:FindFirstChild("Electro") then
-						CombatFrameworkR.activeController.timeToNextAttack = 2
-					else
-						CombatFrameworkR.activeController.timeToNextAttack = 0
-					end
-					CombatFrameworkR.activeController.attacking = false
-					CombatFrameworkR.activeController.increment = 3
-					CombatFrameworkR.activeController.blocking = false
-					CombatFrameworkR.activeController.timeToNextBlock = 0
-					game.Players.LocalPlayer.Character.Humanoid.Sit = false	
-				end
-			end
-		end)
-	end)
-end)
-
 function Click()
 	local VirtualUser = game:GetService('VirtualUser')
 	VirtualUser:CaptureController()
 	VirtualUser:ClickButton1(Vector2.new(851, 158), game:GetService("Workspace").Camera.CFrame)
 end
+
+for i,v in pairs (game:GetService("Workspace"):GetDescendants()) do
+    if v.Name == "Seat" or v.Name == "P1" or v.Name == "P2" then
+        v:Destroy()
+    end
+end
+
+local CameraShakerR = require(game.ReplicatedStorage.Util.CameraShaker)
+CameraShakerR:Stop()
 
 --CFrame.new(-2777.6001, 72.9661407, -3571.42285)
 spawn(function()
@@ -3221,131 +3204,143 @@ spawn(function()
 	while wait() do
 		if _G.fullyautoV3 then
 			if game.PlaceId == 4442272183 then
-				if game:GetService("Players").LocalPlayer.Data.Race.Value == "Mink" then
-					if game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Alchemist","3") ~= -2 then
-						if game.Players.LocalPlayer.Backpack:FindFirstChild("Flower 1") and game.Players.LocalPlayer.Backpack:FindFirstChild("Flower 2") and game.Players.LocalPlayer.Backpack:FindFirstChild("Flower 3") then
-							_G.noclip = true
-							toTarget(CFrame.new(-2777.6001, 72.9661407, -3571.42285))
-							_G.noclip = false
-						else
-							local args = {
-								[1] = "Alchemist",
-								[2] = "1"
-							}
-							
-							game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
-							
-							local args = {
-								[1] = "Alchemist",
-								[2] = "2"
-							}
-							
-							game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
-							if not game.Players.LocalPlayer.Backpack:FindFirstChild("Flower 3") then
-								if game.Workspace.Enemies:FindFirstChild("Marine Lieutenant [Lv. 875]") then
-									for i,v in pairs(game.Workspace.Enemies:GetChildren()) do
-										pcall(function()
-											repeat wait()
-													_G.noclip = true
-													toTarget(v.HumanoidRootPart.CFrame)
-													EquipWeapon(SelectToolWeapon)
-													if not game.Players.LocalPlayer.Character:FindFirstChild("HasBuso") then
-														local args = {
-															[1] = "Buso"
-														}
-														game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
-													end
-													game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0, 10, 0)
-													Click()
-											until not v.Parent or v.Humanoid.Health <= 0 or AutoEvoRace2 == false or LocalPlayer.Backpack:FindFirstChild("Flower 3")
-											_G.noclip = false
-										end)
+				if game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BartiloQuestProgress","Bartilo") == 3 then
+					if game:GetService("Players").LocalPlayer.Data.Race.Value == "Mink" then
+						if game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Alchemist","3") ~= -2 then
+							if game.Players.LocalPlayer.Backpack:FindFirstChild("Flower 1") and game.Players.LocalPlayer.Backpack:FindFirstChild("Flower 2") and game.Players.LocalPlayer.Backpack:FindFirstChild("Flower 3") then
+								_G.noclip = true
+								toTarget(CFrame.new(-2777.6001, 72.9661407, -3571.42285))
+								_G.noclip = false
+							else
+								local args = {
+									[1] = "Alchemist",
+									[2] = "1"
+								}
+								
+								game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
+								
+								local args = {
+									[1] = "Alchemist",
+									[2] = "2"
+								}
+								
+								game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
+								if not game.Players.LocalPlayer.Backpack:FindFirstChild("Flower 3") then
+									if game.Workspace.Enemies:FindFirstChild("Marine Lieutenant [Lv. 875]") then
+										for i,v in pairs(game.Workspace.Enemies:GetChildren()) do
+											if v.Name == "Marine Lieutenant [Lv. 875]" then
+												pcall(function()
+													repeat wait()
+															_G.noclip = true
+															toTarget(v.HumanoidRootPart.CFrame)
+															EquipWeapon(SelectToolWeapon)
+															if not game.Players.LocalPlayer.Character:FindFirstChild("HasBuso") then
+																local args = {
+																	[1] = "Buso"
+																}
+																game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
+															end
+															game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0, 10, 0)
+															Click()
+													until not v.Parent or v.Humanoid.Health <= 0 or AutoEvoRace2 == false or LocalPlayer.Backpack:FindFirstChild("Flower 3")
+													_G.noclip = false
+												end)
+											end
+										end
+									else
+										_G.noclip = true
+										toTarget(CFrame.new(-2776.64111328125, 72.96612548828125, -3571.2177734375))
+										_G.noclip = false
 									end
+								elseif not game.Players.LocalPlayer.Backpack:FindFirstChild("Flower 1") and workspace.Flower1.Transparency ~= 1 then
+									_G.noclip = true
+									toTarget(workspace.Flower1.CFrame)
+									_G.noclip = false
+								elseif not game.Players.LocalPlayer.Backpack:FindFirstChild("Flower 2") and workspace.Flower1.Transparency ~= 2 then
+									_G.noclip = true
+									toTarget(workspace.Flower2.CFrame)
+									_G.noclip = false
 								else
 									_G.noclip = true
 									toTarget(CFrame.new(-2776.64111328125, 72.96612548828125, -3571.2177734375))
 									_G.noclip = false
 								end
-							elseif not game.Players.LocalPlayer.Backpack:FindFirstChild("Flower 1") and workspace.Flower1.Transparency ~= 1 then
-								_G.noclip = true
-								toTarget(workspace.Flower1.CFrame)
-								_G.noclip = false
-							elseif not game.Players.LocalPlayer.Backpack:FindFirstChild("Flower 2") and workspace.Flower1.Transparency ~= 2 then
-								_G.noclip = true
-								toTarget(workspace.Flower2.CFrame)
-								_G.noclip = false
-							else
-								_G.noclip = true
-								toTarget(CFrame.new(-2776.64111328125, 72.96612548828125, -3571.2177734375))
-								_G.noclip = false
 							end
-						end
-					else
-						if not kuy then
-							repeat
-								_G.noclip = true
-								toTarget(CFrame.new(-1991.0274658203125, 125.49334716796875, -70.9441909790039))
-								game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Wenlocktoad","1")
-								game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Wenlocktoad","2")
-							until (CFrame.new(-1991.0274658203125, 125.49334716796875, -70.9441909790039).Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 150
-							_G.noclip = false
-							kuy = true
 						else
-							if count >= 30 or game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Wenlocktoad","3") == -2 then
+							if not kuy then
+								print('hello')
 								repeat
 									_G.noclip = true
-									game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Wenlocktoad","3")
 									toTarget(CFrame.new(-1991.0274658203125, 125.49334716796875, -70.9441909790039))
-
-                                    local RAMAccount = loadstring(game:HttpGet'https://raw.githubusercontent.com/ic3w0lf22/Roblox-Account-Manager/master/RAMAccount.lua')()
-                                    local MyAccount = RAMAccount.new(game:GetService'Players'.LocalPlayer.Name)
-                                    MyAccount:SetAlias('finish V3')
-                                    wait(10)
-                                    game:shutdown()
+									game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Wenlocktoad","1")
+									game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Wenlocktoad","2")
 								until (CFrame.new(-1991.0274658203125, 125.49334716796875, -70.9441909790039).Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 150
 								_G.noclip = false
+								kuy = true
 							else
-								for i,v in pairs(game:GetService("Workspace"):GetChildren()) do
-									if v.Name == "Chest1" or v.Name == "Chest2" or v.Name == "Chest3" then
-										if (v.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= RAYATANG then
-											_G.noclip = false
-											repeat wait()
-												_G.noclip = true
-												toTarget(v.CFrame)
-											until _G.chest == false or not v.Parent
-											tween:Cancel()
-											_G.noclip = false
-											wait(.5)
-											count = count + 1
-											a = 0
-											ui:Notification("count",count)
-											print("count : " ..count)
-											RAYATANG = 0
-										else
-											RAYATANG = RAYATANG + 1
-											print("RAYATANG : " ..RAYATANG)
+								if count >= 30 or game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Wenlocktoad","3") == -2 then
+									print('all set')
+									repeat
+										_G.noclip = true
+										game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Wenlocktoad","3")
+										toTarget(CFrame.new(-1991.0274658203125, 125.49334716796875, -70.9441909790039))
+
+										local RAMAccount = loadstring(game:HttpGet'https://raw.githubusercontent.com/ic3w0lf22/Roblox-Account-Manager/master/RAMAccount.lua')()
+										local MyAccount = RAMAccount.new(game:GetService'Players'.LocalPlayer.Name)
+										MyAccount:SetAlias('finish V3')
+										wait(1)
+										game:shutdown()
+									until (CFrame.new(-1991.0274658203125, 125.49334716796875, -70.9441909790039).Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 150
+									_G.noclip = false
+								else
+									for i,v in pairs(game:GetService("Workspace"):GetChildren()) do
+										if v.Name == "Chest1" or v.Name == "Chest2" or v.Name == "Chest3" then
+											if (v.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= RAYATANG then
+												_G.noclip = false
+												repeat wait()
+													_G.noclip = true
+													toTarget(v.CFrame)
+												until _G.chest == false or not v.Parent
+												tween:Cancel()
+												_G.noclip = false
+												wait(.5)
+												count = count + 1
+												a = 0
+												ui:Notification("count",count)
+												print("count : " ..count)
+												RAYATANG = 0
+											else
+												RAYATANG = RAYATANG + 10
+												print("RAYATANG : " ..RAYATANG)
+											end
 										end
 									end
 								end
 							end
 						end
+					else
+						local args = {
+							[1] = "BlackbeardReward",
+							[2] = "Reroll",
+							[3] = "1"
+						}
+						
+						game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
+						
+						local args = {
+							[1] = "BlackbeardReward",
+							[2] = "Reroll",
+							[3] = "2"
+						}
+						
+						game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
 					end
 				else
-					local args = {
-						[1] = "BlackbeardReward",
-						[2] = "Reroll",
-						[3] = "1"
-					}
-					
-					game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
-					
-					local args = {
-						[1] = "BlackbeardReward",
-						[2] = "Reroll",
-						[3] = "2"
-					}
-					
-					game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
+					local RAMAccount = loadstring(game:HttpGet'https://raw.githubusercontent.com/ic3w0lf22/Roblox-Account-Manager/master/RAMAccount.lua')()
+					local MyAccount = RAMAccount.new(game:GetService'Players'.LocalPlayer.Name)
+					MyAccount:SetAlias('no bato no mink')
+					wait(10)
+					game:shutdown()
 				end
 			else
 				game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelDressrosa")
@@ -3376,3 +3371,76 @@ end)
 
 -- admin
 -- -1991.0274658203125, 125.49334716796875, -70.9441909790039
+
+local SuperFastMode = false -- Change to true if you want Super Super Super Fast attack (Like instant kill) but it will make the game kick you more than normal mode
+
+
+local plr = game.Players.LocalPlayer
+
+local CbFw = debug.getupvalues(require(plr.PlayerScripts.CombatFramework))
+local CbFw2 = CbFw[2]
+
+function GetCurrentBlade() 
+    local p13 = CbFw2.activeController
+    local ret = p13.blades[1]
+    if not ret then return end
+    while ret.Parent~=game.Players.LocalPlayer.Character do ret=ret.Parent end
+    return ret
+end
+function AttackNoCD() 
+    local AC = CbFw2.activeController
+    for i = 1, 1 do 
+        local bladehit = require(game.ReplicatedStorage.CombatFramework.RigLib).getBladeHits(
+            plr.Character,
+            {plr.Character.HumanoidRootPart},
+            60
+        )
+        local cac = {}
+        local hash = {}
+        for k, v in pairs(bladehit) do
+            if v.Parent:FindFirstChild("HumanoidRootPart") and not hash[v.Parent] then
+                table.insert(cac, v.Parent.HumanoidRootPart)
+                hash[v.Parent] = true
+            end
+        end
+        bladehit = cac
+        if #bladehit > 0 then
+            local u8 = debug.getupvalue(AC.attack, 5)
+            local u9 = debug.getupvalue(AC.attack, 6)
+            local u7 = debug.getupvalue(AC.attack, 4)
+            local u10 = debug.getupvalue(AC.attack, 7)
+            local u12 = (u8 * 798405 + u7 * 727595) % u9
+            local u13 = u7 * 798405
+            (function()
+                u12 = (u12 * u9 + u13) % 1099511627776
+                u8 = math.floor(u12 / u9)
+                u7 = u12 - u8 * u9
+            end)()
+            u10 = u10 + 1
+            debug.setupvalue(AC.attack, 5, u8)
+            debug.setupvalue(AC.attack, 6, u9)
+            debug.setupvalue(AC.attack, 4, u7)
+            debug.setupvalue(AC.attack, 7, u10)
+            pcall(function()
+                for k, v in pairs(AC.animator.anims.basic) do
+                    v:Play()
+                end                  
+            end)
+            if plr.Character:FindFirstChildOfClass("Tool") and AC.blades and AC.blades[1] then 
+                game:GetService("ReplicatedStorage").RigControllerEvent:FireServer("weaponChange",tostring(GetCurrentBlade()))
+                game.ReplicatedStorage.Remotes.Validator:FireServer(math.floor(u12 / 1099511627776 * 16777215), u10)
+                game:GetService("ReplicatedStorage").RigControllerEvent:FireServer("hit", bladehit, i, "") 
+            end
+        end
+    end
+end
+local cac
+if SuperFastMode then 
+    cac=task.wait
+else
+    cac=wait
+end
+while cac() do
+	wait(.1)
+    AttackNoCD()
+end
