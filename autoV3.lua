@@ -8,14 +8,37 @@ repeat wait() until game.Players.LocalPlayer.PlayerGui:FindFirstChild("Main");
 
 repeat wait()
 	print('select team')
-	--[[if game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild("Main").ChooseTeam.Visible == true then
-		game:GetService("Players")["LocalPlayer"].PlayerGui.Main.ChooseTeam.Container.Pirates.Frame.ViewportFrame.TextButton.Size = UDim2.new(0, 10000, 0, 10000)
-		game:GetService("Players")["LocalPlayer"].PlayerGui.Main.ChooseTeam.Container.Pirates.Frame.ViewportFrame.TextButton.Position = UDim2.new(-4, 0, -5, 0)
-		game:GetService("Players")["LocalPlayer"].PlayerGui.Main.ChooseTeam.Container.Pirates.Frame.ViewportFrame.TextButton.BackgroundTransparency = 1
-		wait(.5)
-		game:GetService'VirtualUser':Button1Down(Vector2.new(99,99))
-		game:GetService'VirtualUser':Button1Up(Vector2.new(99,99))
-	end]]
+	join = game.Players.localPlayer.Neutral == false
+	if _G.Team == nil then
+		_G.Team = "Pirates"
+	end
+	_G.Team = "Marines"
+	if (_G.Team == "Pirates" or _G.Team == "Marines") and not join then
+		repeat wait()
+			pcall(function()
+				join = game.Players.localPlayer.Neutral == false
+				if _G.Team == "Pirates" then
+					for i,v in pairs({"MouseButton1Click", "MouseButton1Down", "Activated"}) do
+						for i,v in pairs(getconnections(game:GetService("Players").LocalPlayer.PlayerGui.Main.ChooseTeam.Container.Pirates.Frame.ViewportFrame.TextButton[v])) do
+							v.Function()
+						end
+					end
+				elseif _G.Team == "Marines" then
+					for i,v in pairs({"MouseButton1Click", "MouseButton1Down", "Activated"}) do
+						for i,v in pairs(getconnections(game:GetService("Players").LocalPlayer.PlayerGui.Main.ChooseTeam.Container.Marines.Frame.ViewportFrame.TextButton[v])) do
+							v.Function()
+						end
+					end
+				else
+					for i,v in pairs({"MouseButton1Click", "MouseButton1Down", "Activated"}) do
+						for i,v in pairs(getconnections(game:GetService("Players").LocalPlayer.PlayerGui.Main.ChooseTeam.Container.Marines.Frame.ViewportFrame.TextButton[v])) do
+							v.Function()
+						end
+					end
+				end
+			end)
+		until join == true
+	end
 until game.Players.LocalPlayer.Team ~= nil and game:IsLoaded()
 
 do local ui =  game:GetService("CoreGui"):FindFirstChild("UI") if ui then ui:Destroy() end end
