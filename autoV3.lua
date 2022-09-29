@@ -2860,8 +2860,6 @@ page1:Toggle("auto tween chest", _G.chest, function(vu)
 	_G.chest = vu
 end)
 
-_G.whitescreen = false
-
 page1:Toggle("white screen", _G.whitescreen, function(vu)
 	_G.whitescreen = vu
 end)
